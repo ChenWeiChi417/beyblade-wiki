@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>戰鬥陀螺 X（Beyblade X）新手入門教學簡報</title>
+  <style>
+    :root {
+      --bg-dark: #0b1020;
+      --bg-card: #151d36;
+      --bg-card-alt: #1b2546;
+      --border-subtle: #2b3968;
+      --text-main: #f3f6ff;
+      --text-muted: #a9b6d9;
+      --accent-cyan: #00e5ff;
+      --accent-blue: #3b82f6;
+      --accent-amber: #ffb300;
+      --accent-purple: #c084fc;
+      --accent-green: #22c55e;
+      --accent-red: #f43f5e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: radial-gradient(circle at 15% 15%, #172347 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Top Bar & Progress */
+    .topbar {
+      height: 52px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(11, 16, 32, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #061024;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.18s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      background: var(--bg-card-alt);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      min-width: 64px;
+      text-align: center;
+    }
+
+    .progress-track {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+      width: 11.11%;
+      transition: width 0.25s ease;
+    }
+
+    /* Slide Viewport */
+    .deck-viewport {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 36px;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1220px;
+      height: calc(100vh - 110px);
+      max-height: 780px;
+      background: rgba(21, 29, 54, 0.92);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 36px 46px 24px;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      user-select: text;
+      animation: fadeIn 0.22s ease-out;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide-header {
+      margin-bottom: 18px;
+    }
+
+    .slide-kicker {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.12);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .slide-title {
+      font-size: 1.95rem;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+    }
+
+    .tldr-box {
+      margin-top: 12px;
+      padding: 12px 18px;
+      background: rgba(59, 130, 246, 0.14);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 6px 12px 12px 6px;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+
+    .tldr-box strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Slide Body Layouts */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-highlight-cyan {
+      border-top: 4px solid var(--accent-cyan);
+    }
+
+    .card-highlight-amber {
+      border-top: 4px solid var(--accent-amber);
+    }
+
+    .card-highlight-purple {
+      border-top: 4px solid var(--accent-purple);
+    }
+
+    .card-highlight-green {
+      border-top: 4px solid var(--accent-green);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent-cyan);
+      white-space: nowrap;
+    }
+
+    .tag-amber {
+      color: var(--accent-amber);
+      background: rgba(255, 179, 0, 0.15);
+    }
+
+    .tag-purple {
+      color: var(--accent-purple);
+      background: rgba(192, 132, 252, 0.15);
+    }
+
+    .tag-green {
+      color: var(--accent-green);
+      background: rgba(34, 197, 94, 0.15);
+    }
+
+    .tag-pending {
+      color: #cbd5e1;
+      background: rgba(148, 163, 184, 0.18);
+      border: 1px dashed #64748b;
+    }
+
+    .card p, .card li {
+      font-size: 0.93rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .card ul {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .card strong {
+      color: var(--text-main);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      background: var(--bg-card-alt);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+      line-height: 1.45;
+    }
+
+    th {
+      background: rgba(0, 229, 255, 0.1);
+      color: var(--accent-cyan);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Hero Cover Slide */
+    .cover-hero {
+      text-align: center;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .cover-title {
+      font-size: 2.75rem;
+      font-weight: 900;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      line-height: 1.6;
+    }
+
+    /* Slide Footer (Source Citation) */
+    .slide-footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .source-citation {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.08);
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 229, 255, 0.25);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent-cyan);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">BEYBLADE X</span>
+      <span>戰鬥陀螺 X 新手入門教學簡報（LLM Wiki 編譯產出）</span>
+    </div>
+    <div class="controls">
+      <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← 上一頁</button>
+      <span class="page-indicator" id="pageIndicator">1 / 9</span>
+      <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一頁 →</button>
+    </div>
+  </header>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Slide Deck Viewport -->
+  <main class="deck-viewport">
+
+    <!-- Slide 1: 封面 -->
+    <section class="slide active" data-slide="1">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 01 · Beginner Onboarding</span>
+        <h1 class="slide-title">歡迎進入第四代戰鬥陀螺世界</h1>
+      </div>
+      <div class="slide-body">
+        <div class="cover-hero">
+          <div class="cover-title">戰鬥陀螺 X（Beyblade X）新手入門完整指南</div>
+          <p class="cover-subtitle">
+            由 <strong>Takara Tomy</strong> 推出的第四代戰鬥陀螺，主打結合齒輪加速機制「<strong>極限衝刺（Xtreme Dash）</strong>」的「<strong>Gear Sports（齒輪運動）</strong>」，強調高速碰撞與高競技性。
+          </p>
+        </div>
+        <div class="grid-4">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>1. 核心構造</span><span class="tag">Step 1</span></div>
+            <p>認識由上至下組成的三大核心部件：<strong>戰刃（Blade）</strong>、<strong>固鎖（Ratchet）</strong>、<strong>軸心（Bit）</strong>與<strong>極限衝刺</strong>機制。</p>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-title"><span>2. 三大系列</span><span class="tag tag-amber">Step 2</span></div>
+            <p>搞懂 <strong>BX（基礎系列）</strong>、<strong>UX（獨特系列）</strong>與 <strong>CX（客製系列）</strong>在戰刃結構與重心上的差異。</p>
+          </div>
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>3. 計分規則</span><span class="tag tag-purple">Step 3</span></div>
+            <p>看懂標準對戰 <strong>4 分制</strong>與持久（1 分）、擊飛（2 分）、爆裂（2 分）、極限（3 分）四種獲勝方式。</p>
+          </div>
+          <div class="card card-highlight-green">
+            <div class="card-title"><span>4. 3on3 賽制</span><span class="tag tag-green">Step 4</span></div>
+            <p>掌握 <strong>3 顆陀螺零件皆不重複</strong>的 <strong>3on3 Deck</strong> 官方組牌規則與秘密出戰順序流程。</p>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/guides/beginner-guide.md、wiki/index.md</span>
+        <span>使用鍵盤 ← → 左右方向鍵切換投影片</span>
+      </footer>
+    </section>
+
+    <!-- Slide 2: 三大核心部件 -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 02 · Core Structure</span>
+        <h2 class="slide-title">三大核心部件：戰刃、固鎖、軸心</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：每顆戰鬥陀螺 X 皆由上至下由<strong>戰刃（Blade）</strong>、<strong>固鎖（Ratchet）</strong>與<strong>軸心（Bit）</strong>三大核心部件組裝而成，分別決定碰撞外型、高度與抗爆裂能力，以及移動軌跡與齒輪加速機能。
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>1. 戰刃（Blade）</span><span class="tag">最上層</span></div>
+            <ul>
+              <li><strong>材質結構</strong>：陀螺最上層的<strong>金屬與樹脂複合結構</strong>。</li>
+              <li><strong>決定性能</strong>：決定陀螺的<strong>攻擊形狀</strong>、<strong>防禦輪廓</strong>與<strong>重心分布</strong>。</li>
+              <li><strong>系列演進</strong>：BX 與 UX 系列為單一零件；CX 系列則拆分為鎖定晶片、主戰刃、輔助戰刃三層子部件。</li>
+            </ul>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-title"><span>2. 固鎖（Ratchet）</span><span class="tag tag-amber">中間層</span></div>
+            <ul>
+              <li><strong>位置與功能</strong>：連接戰刃與軸心的中間零件，決定陀螺的<strong>高度</strong>與<strong>抗爆裂能力</strong>。</li>
+              <li><strong>命名方式</strong>：採用「<strong>刃數-高度</strong>」格式。</li>
+              <li><strong>標準範例</strong>：<code>3-60</code> 代表具備 <strong>3 個凸點</strong>、高度 <strong>6.0mm</strong>（其他具體固鎖型號清單：<span class="tag tag-pending">待補充</span>）。</li>
+            </ul>
+          </div>
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>3. 軸心（Bit）</span><span class="tag tag-purple">最下層</span></div>
+            <ul>
+              <li><strong>位置與構造</strong>：最下層接觸戰鬥盤的部件，<strong>自帶齒輪結構</strong>。</li>
+              <li><strong>決定移動軌跡</strong>：分為<strong>攻擊、防禦、持久、平衡</strong>四大類型（已知 <code>BX-01 蒼龍神劍</code> 搭配 <code>Flat</code> 軸心；其他軸心型號：<span class="tag tag-pending">待補充</span>）。</li>
+              <li><strong>加速關鍵</strong>：與戰鬥盤極限軌道咬合即可觸發<strong>極限衝刺（Xtreme Dash）</strong>。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/concepts/core-parts.md</span>
+        <span>第 2 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 3: 極限衝刺與戰鬥盤場地 -->
+    <section class="slide" data-slide="3">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 03 · Signature Gimmick &amp; Stadium</span>
+        <h2 class="slide-title">極限衝刺（Xtreme Dash）與官方戰鬥盤場地</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：當陀螺底部的<strong>軸心（Bit）</strong>齒輪與戰鬥盤內側的<strong>極限軌道（Xtreme Line）</strong>咬合時，陀螺會沿著軌道進行超高速加速並切入盤心發動猛烈撞擊。
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>極限衝刺運作流程與戰術應用</span><span class="tag">Gear Sports 核心</span></div>
+            <ul>
+              <li><strong>Step 1 齒輪接觸軌道</strong>：陀螺在戰鬥盤移動時，自帶齒輪的<strong>軸心（Bit）</strong>接觸戰鬥盤內側的<strong>極限軌道（Xtreme Line）</strong>。</li>
+              <li><strong>Step 2 沿軌超高速加速</strong>：軸心齒輪與極限軌道咬合，沿著軌道進行超高速加速。</li>
+              <li><strong>Step 3 切入盤心猛烈撞擊</strong>：高速切入盤心猛烈撞擊對手！</li>
+              <li><strong>主動頻繁觸發代表</strong>：<code>BX-01 蒼龍神劍</code>（標準攻擊型，搭配 <code>Flat</code> 軸心能頻繁觸發極限衝刺）。</li>
+              <li><strong>吸收化解衝擊代表</strong>：<code>UX-08 霜輝銀狼</code>（搭載自由迴轉外環結構，能有效吸收並化解對手的極限衝刺衝擊）。</li>
+            </ul>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-title"><span>BX-10 極限衝擊戰鬥盤（官方標準競技場地）</span><span class="tag tag-amber">BX 系列周邊</span></div>
+            <p>隸屬 BX 系列的官方標準競技場地（其他戰鬥盤型號：<span class="tag tag-pending">待補充</span>），內建三大關鍵區域：</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>場地結構／區域</th>
+                  <th>位置</th>
+                  <th>功能與計分判定</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>極限軌道（Xtreme Line）</strong></td>
+                  <td>戰鬥盤內側</td>
+                  <td>與軸心齒輪咬合，觸發超高速加速的<strong>極限衝刺</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>擊飛區（Over Zone）</strong></td>
+                  <td>戰鬥盤角落</td>
+                  <td>將對手撞入此區達成<strong>擊飛獲勝（2 分）</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>極限區（Xtreme Zone）</strong></td>
+                  <td>戰鬥盤正中央</td>
+                  <td>將對手撞入此區達成最高分<strong>極限獲勝（3 分）</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/concepts/xtreme-dash.md、wiki/entities/stadiums.md</span>
+        <span>第 3 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 4: BX 與 UX 系列介紹 -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 04 · Product Lines (Part 1)</span>
+        <h2 class="slide-title">三大產品系列（一）：BX 基礎系列 vs UX 獨特系列</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：<strong>BX 系列（Basic Line）</strong>採用金屬發射器鉤爪一體成型、配重平均，最適合新手入門；<strong>UX 系列（Unique Line）</strong>改用輕量化樹脂鉤爪將金屬集中至最外圈形成「外重心設計」，大幅強化極端性能。
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>BX 系列（Basic Line）基礎系列</span><span class="tag">新手入門首選</span></div>
+            <ul>
+              <li><strong>系列特色</strong>：最初登場的標準系列，性能均衡、零件泛用性高。</li>
+              <li><strong>鉤爪與配重</strong>：戰刃中心的<strong>發射器鉤爪（Launcher Hooks）</strong>採用<strong>金屬材質一體成型</strong>，整體配重較為平均。</li>
+              <li><strong>陣容範圍</strong>：涵蓋攻擊型、防禦型、持久型、平衡型四大類型，並包含 <code>BX-10 極限衝擊戰鬥盤</code> 與發射器等基礎周邊。</li>
+              <li><strong>代表性陀螺（固鎖／其餘軸心配置：待補充）</strong>：
+                <ul>
+                  <li><code>BX-01 蒼龍神劍</code>（攻擊型，搭配 <code>Flat</code> 軸心頻繁觸發極限衝刺）</li>
+                  <li><code>BX-02 惡魔紅鐮</code>（平衡型，兼顧進攻與中盤穩定度）</li>
+                  <li><code>BX-03 魔導幻箭</code>（持久型，圓滑外型減少碰撞時的轉速流失）</li>
+                  <li><code>BX-04 騎士重盾</code>（防禦型，具備高抗擊飛穩定性）</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-title"><span>UX 系列（Unique Line）獨特系列</span><span class="tag tag-amber">外重心進階特化</span></div>
+            <ul>
+              <li><strong>系列特色</strong>：進階特化系列，將戰刃設計推向更極端的性能表現，每顆皆具鮮明戰術定位。</li>
+              <li><strong>外重心設計</strong>：將戰刃中央的發射器鉤爪改為<strong>輕量化的樹脂材質</strong>，把更多金屬重量集中到戰刃最外圈。</li>
+              <li><strong>性能優勢</strong>：透過外重心大幅強化<strong>離心力</strong>，讓攻擊型的瞬間破壞力、持久型的尾速續航力都比標準 BX 系列更突出。</li>
+              <li><strong>代表性陀螺（固鎖／軸心配置：待補充）</strong>：
+                <ul>
+                  <li><code>UX-01 蒼龍爆刃</code>（強攻型，大面積單點金屬集中設計，主打一擊擊飛）</li>
+                  <li><code>UX-02 惡魔戰錘</code>（平衡型，具備向下壓迫對手的特殊戰刃角度）</li>
+                  <li><code>UX-03 魔導神杖</code>（極致持久型，大直徑外重心設計擁有極高耐力）</li>
+                  <li><code>UX-08 霜輝銀狼</code>（搭載自由迴轉外環結構，吸收並化解極限衝刺衝擊）</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/series/bx-series.md、wiki/series/ux-series.md</span>
+        <span>第 4 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 5: CX 客製系列介紹 -->
+    <section class="slide" data-slide="5">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 05 · Product Lines (Part 2)</span>
+        <h2 class="slide-title">三大產品系列（二）：CX 客製系列與戰刃三層分解</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：<strong>CX 系列（Custom Line）</strong>是強調深度改裝自由度的客製化系列，打破過去戰刃（Blade）一體成型的限制，將戰刃拆分為<strong>鎖定晶片</strong>、<strong>主戰刃</strong>與<strong>輔助戰刃</strong>三個可自由替換的子部件。
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>1. 鎖定晶片（Lock Chip）</span><span class="tag tag-purple">戰刃子部件 1</span></div>
+            <p>位於戰刃中心，<strong>負責固定整個戰刃結構的核心蓋片</strong>。</p>
+          </div>
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>2. 主戰刃（Main Blade）</span><span class="tag tag-purple">戰刃子部件 2</span></div>
+            <p>戰刃核心刃體，<strong>決定主要碰撞接觸面與金屬重量的核心刃體</strong>。</p>
+          </div>
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>3. 輔助戰刃（Assist Blade）</span><span class="tag tag-purple">戰刃子部件 3</span></div>
+            <p>安裝在主戰刃下方，<strong>用來調整高度、攻擊角度或防禦輔助效果</strong>。</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <span>CX 系列代表性商品與戰術價值（讓同一顆陀螺衍生出多種完全不同的戰鬥風格）</span>
+            <span class="tag tag-pending">鉤爪材質與重心分布：待補充</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>商品編號與名稱</th>
+                <th>戰鬥類型／定位</th>
+                <th>核心特色說明</th>
+                <th>完整零件配置（固鎖／軸心）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CX-01 蒼龍勇氣</strong></td>
+                <td>攻擊型</td>
+                <td>CX 系列首發攻擊型，透過輔助戰刃強化連擊與衝擊力</td>
+                <td><span class="tag tag-pending">待補充</span></td>
+              </tr>
+              <tr>
+                <td><strong>CX-02 魔導至尊</strong></td>
+                <td>持久／高穩定型</td>
+                <td>主打高穩定與持久特性的客製型號</td>
+                <td><span class="tag tag-pending">待補充</span></td>
+              </tr>
+              <tr>
+                <td><strong>CX-03 英仙幽冥</strong></td>
+                <td>反擊／防禦型</td>
+                <td>具備獨特反擊與防禦結構的客製戰刃</td>
+                <td><span class="tag tag-pending">待補充</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/series/cx-series.md</span>
+        <span>第 5 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 6: 三大系列全方位比較與代表陀螺 -->
+    <section class="slide" data-slide="6">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 06 · Series Comparison &amp; Representative Beys</span>
+        <h2 class="slide-title">BX / UX / CX 三大系列全方位比較表</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：三大系列在戰刃結構與重心設計上各具特色——BX 為單一戰刃＋金屬鉤爪平均配重；UX 為單一戰刃＋樹脂鉤爪外重心；CX 為三層分解客製戰刃（未於知識庫提及之欄位嚴格標註「待補充」）。
+        </div>
+      </div>
+      <div class="slide-body">
+        <table>
+          <thead>
+            <tr>
+              <th>比較維度</th>
+              <th>BX 系列（Basic Line 基礎系列）</th>
+              <th>UX 系列（Unique Line 獨特系列）</th>
+              <th>CX 系列（Custom Line 客製系列）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>核心設計定位</strong></td>
+              <td>最初登場的標準系列，性能均衡、零件泛用性高，適合新手入門基礎</td>
+              <td>進階特化系列，將戰刃設計推向更極端的性能表現，具鮮明戰術定位</td>
+              <td>強調深度改裝自由度的客製化系列，能針對戰術微調戰刃構造</td>
+            </tr>
+            <tr>
+              <td><strong>戰刃（Blade）結構</strong></td>
+              <td>單一零件（一體成型結構）</td>
+              <td>單一零件（外圈金屬集中結構）</td>
+              <td><strong>戰刃三層分解</strong>：鎖定晶片、主戰刃、輔助戰刃三個可替換子部件</td>
+            </tr>
+            <tr>
+              <td><strong>發射器鉤爪材質</strong></td>
+              <td><strong>金屬材質</strong>（一體成型）</td>
+              <td><strong>輕量化樹脂材質</strong></td>
+              <td><span class="tag tag-pending">待補充</span></td>
+            </tr>
+            <tr>
+              <td><strong>重心分布特色</strong></td>
+              <td>整體配重較為平均</td>
+              <td><strong>外重心設計</strong>（金屬重量集中至最外圈，大幅強化離心力）</td>
+              <td><span class="tag tag-pending">待補充</span></td>
+            </tr>
+            <tr>
+              <td><strong>攻擊型代表（蒼龍系）</strong></td>
+              <td><code>BX-01 蒼龍神劍</code>（搭 <code>Flat</code> 軸心）</td>
+              <td><code>UX-01 蒼龍爆刃</code>（單點金屬集中一擊擊飛）</td>
+              <td><code>CX-01 蒼龍勇氣</code>（輔助戰刃強化連擊衝擊）</td>
+            </tr>
+            <tr>
+              <td><strong>持久型代表（魔導系）</strong></td>
+              <td><code>BX-03 魔導幻箭</code>（圓滑減少轉速流失）</td>
+              <td><code>UX-03 魔導神杖</code>（大直徑外重心極高耐力）</td>
+              <td><code>CX-02 魔導至尊</code>（高穩定與持久客製型號）</td>
+            </tr>
+            <tr>
+              <td><strong>平衡／防禦／反擊代表</strong></td>
+              <td><code>BX-02 惡魔紅鐮</code>、<code>BX-04 騎士重盾</code></td>
+              <td><code>UX-02 惡魔戰錘</code>、<code>UX-08 霜輝銀狼</code></td>
+              <td><code>CX-03 英仙幽冥</code>（獨特反擊與防禦結構）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/guides/series-comparison.md、wiki/entities/representative-beys.md</span>
+        <span>第 6 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 7: 四種獲勝方式與 4 分制計分規則 -->
+    <section class="slide" data-slide="7">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 07 · Scoring Rules</span>
+        <h2 class="slide-title">四種獲勝方式與 4 分制計分規則</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：戰鬥陀螺 X 標準對戰採 <strong>4 分制</strong>（先獲得 4 分者勝出）。不同擊破方式會獲得 1 至 3 分的不同分數，使比賽節奏緊湊且充滿逆轉可能。
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-4">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>持久獲勝</span><span class="tag">1 分</span></div>
+            <p><strong>Spin Finish</strong></p>
+            <p>對手陀螺比自己<strong>先停止旋轉</strong>。</p>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-title"><span>擊飛獲勝</span><span class="tag tag-amber">2 分</span></div>
+            <p><strong>Over Finish</strong></p>
+            <p>將對手撞入戰鬥盤角落的<strong>擊飛區（Over Zone）</strong>。</p>
+          </div>
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>爆裂獲勝</span><span class="tag tag-purple">2 分</span></div>
+            <p><strong>Burst Finish</strong></p>
+            <p>將對手陀螺<strong>撞至零件解體</strong>（與固鎖抗爆裂能力相關）。</p>
+          </div>
+          <div class="card card-highlight-green">
+            <div class="card-title"><span>極限獲勝</span><span class="tag tag-green">3 分（最高）</span></div>
+            <p><strong>Xtreme Finish</strong></p>
+            <p>將對手撞入戰鬥盤正中央的<strong>極限區（Xtreme Zone）</strong>，得分最高！</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span>為什麼 4 分制讓比賽充滿張力？</span><span class="tag">戰術亮點</span></div>
+          <ul>
+            <li><strong>多元取勝途徑</strong>：持久型陀螺可憑藉低轉速流失與高耐力穩取 1 分；攻擊型陀螺則可透過極限衝刺追求 2 分（擊飛／爆裂）或 3 分（極限獲勝）的高分一擊。</li>
+            <li><strong>隨時可能逆轉</strong>：即使比數落後，只要成功將對手撞入正中央的極限區（Xtreme Zone）達成極限獲勝（3 分），就能瞬間扭轉戰局。</li>
+          </ul>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/concepts/scoring-rules.md、wiki/entities/stadiums.md</span>
+        <span>第 7 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 8: 3on3 Deck 官方賽制 -->
+    <section class="slide" data-slide="8">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 08 · Official Tournament Format</span>
+        <h2 class="slide-title">3on3 Deck 官方賽制與組牌規則</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：每位選手需準備 <strong>3 顆陀螺</strong>組成牌組（Deck），且 3 顆陀螺所使用的<strong>戰刃（Blade）、固鎖（Ratchet）、軸心（Bit）皆不可重複</strong>；賽前秘密排定 1、2、3 號出戰順序依序對決，先取得 4 分者勝出。
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>規則一：牌組（Deck）編組鐵則</span><span class="tag">零件零重複</span></div>
+            <ul>
+              <li><strong>準備 3 顆陀螺</strong>：每位選手必須準備 <strong>3 顆陀螺</strong>組成一副牌組（Deck）。</li>
+              <li><strong>三大部件皆不可重複</strong>：3 顆陀螺所使用的<strong>戰刃（Blade）</strong>、<strong>固鎖（Ratchet）</strong>、<strong>軸心（Bit）</strong>皆不可重複（必須使用 3 個不同戰刃、3 個不同固鎖、3 個不同軸心）。</li>
+              <li><strong>補充說明</strong>：CX 系列戰刃三層子部件（鎖定晶片、主戰刃、輔助戰刃）於 3on3 賽制中的細部重複判定細則：<span class="tag tag-pending">待補充</span>。</li>
+            </ul>
+          </div>
+          <div class="card card-highlight-green">
+            <div class="card-title"><span>規則二：出戰順序與重排續戰流程</span><span class="tag tag-green">4 分制對決</span></div>
+            <ul>
+              <li><strong>Step 1 秘密排定順序</strong>：比賽前雙方需秘密排定 <strong>1 號、2 號、3 號</strong>陀螺的出戰順序。</li>
+              <li><strong>Step 2 依序 1 對 1 對決</strong>：雙方依 1、2、3 號順序進行 1 對 1 對戰，並依四種獲勝方式累計分數。</li>
+              <li><strong>Step 3 未達 4 分重排續戰</strong>：若打完 3 場仍未分出 <strong>4 分</strong>勝負，雙方需<strong>重新排列出戰順序</strong>繼續比賽，直到其中一方先獲得 4 分勝出。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/concepts/3on3-deck.md</span>
+        <span>第 8 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+    <!-- Slide 9: 新手起手建議與入門路線總結 -->
+    <section class="slide" data-slide="9">
+      <div class="slide-header">
+        <span class="slide-kicker">Slide 09 · Beginner Roadmap</span>
+        <h2 class="slide-title">新手起手建議與入門路線總結</h2>
+        <div class="tldr-box">
+          <strong>TL;DR</strong>：零基礎新手建議先從性能均衡且包含官方戰鬥盤周邊的 <strong>BX 系列</strong> 起手，熟悉極限衝刺與四大類型後，再加入 <strong>UX 系列</strong> 特化主力與 <strong>CX 系列</strong> 三層客製戰刃，完成你的第一副 3on3 Deck 牌組！
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-highlight-cyan">
+            <div class="card-title"><span>第一階段：基礎起手（BX）</span><span class="tag">Phase 1</span></div>
+            <ul>
+              <li>入手官方標準競技場地 <code>BX-10 極限衝擊戰鬥盤</code> 與發射器等基礎周邊。</li>
+              <li>從配重平均、泛用性高的 <strong>BX 系列</strong> 挑選第一顆陀螺（如攻擊型 <code>BX-01 蒼龍神劍</code>、平衡型 <code>BX-02 惡魔紅鐮</code>、持久型 <code>BX-03 魔導幻箭</code> 或防禦型 <code>BX-04 騎士重盾</code>）。</li>
+            </ul>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-title"><span>第二階段：特化強化（UX）</span><span class="tag tag-amber">Phase 2</span></div>
+            <ul>
+              <li>引入採用樹脂鉤爪與<strong>外重心設計</strong>的 <strong>UX 系列</strong>，強化牌組的單點突破或尾速續航。</li>
+              <li>依戰術需求選擇：一擊擊飛強攻型 <code>UX-01 蒼龍爆刃</code>、下壓平衡型 <code>UX-02 惡魔戰錘</code>、極致持久型 <code>UX-03 魔導神杖</code> 或自由迴轉外環化解衝擊的 <code>UX-08 霜輝銀狼</code>。</li>
+            </ul>
+          </div>
+          <div class="card card-highlight-purple">
+            <div class="card-title"><span>第三階段：深度客製與 3on3（CX）</span><span class="tag tag-purple">Phase 3</span></div>
+            <ul>
+              <li>搭配 <strong>CX 系列</strong>（<code>CX-01 蒼龍勇氣</code>、<code>CX-02 魔導至尊</code>、<code>CX-03 英仙幽冥</code>），透過鎖定晶片、主戰刃與輔助戰刃微調高度、攻擊角度或防禦效果。</li>
+              <li>挑選 <strong>3 顆戰刃、固鎖、軸心皆不重複</strong>的陀螺，組建你的 <strong>3on3 Deck</strong> 正式參賽！</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span class="source-citation">資料來源：wiki/guides/beginner-guide.md、wiki/guides/series-comparison.md</span>
+        <span>第 9 頁 / 共 9 頁</span>
+      </footer>
+    </section>
+
+  </main>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const progressFill = document.getElementById('progressFill');
+
+    function updateSlideView() {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === currentIndex);
+      });
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === totalSlides - 1;
+      pageIndicator.textContent = `${currentIndex + 1} / ${totalSlides}`;
+      progressFill.style.width = `${((currentIndex + 1) / totalSlides) * 100}%`;
+    }
+
+    function changeSlide(delta) {
+      const nextIndex = currentIndex + delta;
+      if (nextIndex >= 0 && nextIndex < totalSlides) {
+        currentIndex = nextIndex;
+        updateSlideView();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        changeSlide(-1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        currentIndex = 0;
+        updateSlideView();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        currentIndex = totalSlides - 1;
+        updateSlideView();
+      }
+    });
+
+    updateSlideView();
+  </script>
+</body>
+</html>
